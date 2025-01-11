@@ -1,11 +1,14 @@
 <template>
   <div>
-    <UForm class="w-[16rem] flex flex-col gap-2" :state="state" @submit="onSubmit">
+    <UForm
+      class="w-[16rem] flex flex-col gap-2"
+      :state="state"
+      @submit="onSubmit">
       <span>
         <h1 class="text-xl font-bold m-0">{{ title }}</h1>
         <p class="opacity-70 m-0">{{ description }}</p>
       </span>
-      
+
       <UFormGroup label="Email" name="email">
         <UInput v-model="state.email" />
       </UFormGroup>
@@ -20,52 +23,44 @@
 </template>
 
 <script setup lang="ts">
-  import type { Form, FormSubmitEvent } from '#ui/types'
+import type { Form, FormSubmitEvent } from "#ui/types";
 
-  const Schema = {
-    email: {
-      type: 'string',
-      required: true,
-      email: true
-    },
-    password: {
-      type: 'string',
-      required: true,
-      min: 6
-    }
-  }
+interface Schema {
+  email: string;
+  password: string;
+}
 
-  const state = reactive<Schema>({
-    email: '',
-    password: '',
-  })
+const state = reactive<Schema>({
+  email: "",
+  password: "",
+});
 
-const form = ref < Form < Schema >> ()
+const form = ref<Form<Schema>>();
 
+const config = useRuntimeConfig();
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  form.value!.clear()
   try {
-    const response = await $fetch('login', {
-      method: 'POST',
-      body: JSON.stringify(event.values)
-    })
+    const response = await $fetch(`${config.public.apiBase}/login`, {
+      method: "POST",
+      body: state,
+      credentials: 'include'
+    });
+    console.log(response);
   } catch (error) {
-    
+    console.error(error);
   }
 }
 
-  const props = defineProps({
-    title: {
-      type: String,
-      default: 'Login'
-    },
-    description: {
-      type: String,
-      default: 'Sebagai Student'
-    }
-  })
+const props = defineProps({
+  title: {
+    type: String,
+    default: "Login"
+  },
+  description: {
+    type: String,
+    default: "Sebagai Student"
+  },
+});
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
