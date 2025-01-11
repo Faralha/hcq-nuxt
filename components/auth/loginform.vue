@@ -18,12 +18,24 @@
       </UFormGroup>
 
       <UButton type="submit" class="mt-3 justify-center">Login</UButton>
+    
+      <!-- POP-UP ALERT -->
+      <UAlert
+        v-if="error"
+        icon="x-circle"
+        color="red"
+        variant="solid"
+        title="Error"
+        :description="error" />
     </UForm>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { Form, FormSubmitEvent } from "#ui/types";
+
+const config = useRuntimeConfig();
+const error = ref<string | null>(null);
 
 interface Schema {
   email: string;
@@ -35,19 +47,21 @@ const state = reactive<Schema>({
   password: "",
 });
 
-const form = ref<Form<Schema>>();
-
-const config = useRuntimeConfig();
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
-    const response = await $fetch(`${config.public.apiBase}/login`, {
+    const response:any = await $fetch(`${config.public.apiBase}${props.link}/login`, {
       method: "POST",
       body: state,
       credentials: 'include'
     });
-    console.log(response);
-  } catch (error) {
-    console.error(error);
+    if (response.status == 'success') {
+      error.value = null;
+      await navigateTo('/');
+    } else {
+      error.value = response.message || 'An error occured';
+    }
+  } catch (err:any) {
+    error.value = err.message || 'An error occured';
   }
 }
 
@@ -58,8 +72,12 @@ const props = defineProps({
   },
   description: {
     type: String,
-    default: "Sebagai Student"
+    default: "Sebagai Murid"
   },
+  link: {
+    type: String,
+    default: ""
+  }
 });
 </script>
 
