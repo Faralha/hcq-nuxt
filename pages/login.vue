@@ -1,6 +1,6 @@
 <template>
   <div class="flex h-screen items-center justify-center">
-    <AuthLoginform />
+    <AuthLoginform :description="Sebagai Murid" />
   </div>
 </template>
 
