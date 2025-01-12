@@ -26,7 +26,8 @@
         <UInput v-model="state.password" type="password" />
       </UFormGroup>
 
-      <UButton type="submit" class="mt-3 justify-center">Register</UButton>
+      <UButton v-if="isLoading" class="mt-3 justify-center" loading>Loading</UButton>
+      <UButton v-else type="submit" class="mt-3 justify-center">Register</UButton>
 
       <!-- POP-UP ALERT -->
       <UAlert
@@ -45,6 +46,7 @@ import type { FormSubmitEvent } from "#ui/types";
 
 const config = useRuntimeConfig();
 const error = ref<string | null>(null);
+const isLoading = ref<boolean>(false);
 
 interface Schema {
   email: string;
@@ -61,6 +63,7 @@ const state = reactive<Schema>({
 });
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
+  isLoading.value = true;
   try {
     console.log(state);
     const response:any = await $fetch(`${config.public.apiBase}${props.link}/register`, {
@@ -79,6 +82,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     }
   } catch (err: any) {
     error.value = err.message || "An error occurred";
+  } finally {
+    isLoading.value = false;
   }
 }
 

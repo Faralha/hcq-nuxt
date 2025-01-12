@@ -17,7 +17,8 @@
         <UInput v-model="state.password" type="password" />
       </UFormGroup>
 
-      <UButton type="submit" class="mt-3 justify-center">Login</UButton>
+      <UButton v-if="isLoading" class="mt-3 justify-center" loading>Loading</UButton>
+      <UButton v-else type="submit" class="mt-3 justify-center">Login</UButton>
     
       <!-- POP-UP ALERT -->
       <UAlert
@@ -47,7 +48,9 @@ const state = reactive<Schema>({
   password: "",
 });
 
+const isLoading = ref<boolean>(false);
 async function onSubmit(event: FormSubmitEvent<Schema>) {
+  isLoading.value = true;
   try {
     const response:any = await $fetch(`${config.public.apiBase}${props.link}/login`, {
       method: "POST",
@@ -58,11 +61,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       error.value = null;
       await navigateTo('/');
     } else {
-      error.value = response.message || 'An error occured';
+      error.value = "Wrong Email or Password!";
     }
   } catch (err: any) {
-    console.error(err);
-    error.value = err.message.message || 'An error occured';
+    error.value = "Wrong Email or Password!";
+  } finally {
+    isLoading.value = false;
   }
 }
 

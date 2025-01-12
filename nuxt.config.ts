@@ -9,4 +9,7 @@ export default defineNuxtConfig({
     },
   },
   ssr: false,
+  css: [
+    '~/assets/css/custom.css'
+  ]
 });
