@@ -6,9 +6,13 @@
       :state="state"
       @submit="onSubmit">
       <span>
-        <h1 class="text-xl font-bold m-0">{{ title }}</h1>
-        <p class="opacity-70 m-0">{{ description }}</p>
+        <h1 class="text-xl font-bold m-0">Register</h1>
+        <p class="opacity-70 m-0">Sebagai Admin</p>
       </span>
+
+      <UFormGroup label="Token" name="token">
+        <UInput v-model="state.token" type="password" />
+      </UFormGroup>
 
       <UFormGroup label="Email" name="email">
         <UInput v-model="state.email" />
@@ -47,6 +51,7 @@ const config = useRuntimeConfig();
 const error = ref<string | null>(null);
 
 interface Schema {
+  token: string,
   email: string;
   password: string;
   name: string;
@@ -54,6 +59,7 @@ interface Schema {
 }
 
 const state = reactive<Schema>({
+  token: "",
   email: "",
   password: "",
   name: "",
@@ -63,7 +69,7 @@ const state = reactive<Schema>({
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
     console.log(state);
-    const response:any = await $fetch(`${config.public.apiBase}${props.link}/register`, {
+    const response:any = await $fetch(`${config.public.apiBase}/admin/register`, {
       method: "POST",
       body: JSON.stringify(state),
       headers: {
@@ -73,7 +79,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     });
     if (response.status == 'success') {
       error.value = null;
-      await navigateTo(`${props.link}/login`);
+      await navigateTo(`/admin/login`);
     } else {
       error.value = response.message || "An error occurred";
     }
@@ -82,20 +88,6 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   }
 }
 
-const props = defineProps({
-  title: {
-    type: String,
-    default: "Register",
-  },
-  description: {
-    type: String,
-    default: "Sebagai Murid",
-  },
-  link: {
-    type: String,
-    default: "",
-  },
-});
 </script>
 
 <style scoped></style>

@@ -22,7 +22,7 @@
       <!-- POP-UP ALERT -->
       <UAlert
         v-if="error"
-        icon="x-circle"
+        icon="i-heroicons-x-circle"
         color="red"
         variant="solid"
         title="Error"
@@ -60,8 +60,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     } else {
       error.value = response.message || 'An error occured';
     }
-  } catch (err:any) {
-    error.value = err.message || 'An error occured';
+  } catch (err: any) {
+    console.error(err);
+    error.value = err.message.message || 'An error occured';
   }
 }
 
