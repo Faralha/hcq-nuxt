@@ -1,5 +1,5 @@
 <template>
-  <section class="container-normal py-[5rem]">
+  <section class="container-verysmall py-[5rem]">
     <h1 class="text-3xl font-bold">Manage Mentor</h1>
     <p class="opacity-60">Verifikasi Mentor</p>
 
