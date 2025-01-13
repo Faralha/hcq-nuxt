@@ -1,7 +1,8 @@
 <template>
   <div class="flex flex-row h-screen w-screen">
-    <NavbarAdmin v-if="isAdminRoute" class="h-full p-5 bg-gray-800 text-white" />
-
+    <div class="h-full p-5 bg-gray-800 ">
+      <NavbarAdmin v-if="isAdminRoute" class="text-white" />
+    </div>
     <div class="flex flex-col w-full">
       <NuxtPage class="w-full pl-2" />
       <NuxtRouteAnnouncer />

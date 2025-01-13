@@ -17,7 +17,7 @@ const links = [
 
 <template>
   <div class="flex flex-col">
-    <p class="font-bold text-3xl mb-3">HCQ.</p>
+    <!-- <p class="font-bold text-3xl mb-3">HCQ.</p> -->
     <UVerticalNavigation :links="links" />
   </div>
 </template>
