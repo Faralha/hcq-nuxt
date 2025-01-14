@@ -1,5 +1,11 @@
 <template>
   <section class="container-verysmall py-[5rem]">
+    <div>
+      <NuxtLink to="/admin/manage/class">
+        <UButton icon="i-heroicons-arrow-left-circle" variant="link" class="pl-0 mb-3">Kembali ke Kelas</UButton>
+      </NuxtLink>
+    </div>
+
     <div class="flex items-end justify-between">
       <div>
         <h1 class="text-3xl font-bold">Class: {{ class_id }} </h1>
@@ -16,7 +22,8 @@
 
             <UForm :state="state" @submit="assignStudent">
               <UFormGroup label="Student">
-                <USelectMenu searchable searchable-placeholder="Select Student" multiple :options="formattedStudents" class="w-full" v-model="state.students" />
+                <USelectMenu searchable searchable-placeholder="Select Student" multiple :options="formattedStudents"
+                  class="w-full" v-model="state.students" />
               </UFormGroup>
 
               <div class="mt-3">

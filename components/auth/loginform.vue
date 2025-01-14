@@ -59,7 +59,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     });
     if (response.status == 'success') {
       error.value = null;
-      await navigateTo('/');
+      await navigateTo(
+        `${props.link}/`
+      );
     } else {
       error.value = "Wrong Email or Password!";
     }
