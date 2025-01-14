@@ -15,7 +15,8 @@
 
           <UForm :state="state" @submit="addClass">
             <UFormGroup label="Mentor">
-              <USelectMenu searchable searchable-placeholder="Select Mentor" :options="formattedMentor" class="w-full" v-model="state.mentor" />
+              <USelectMenu searchable searchable-placeholder="Select Mentor" :options="formattedMentor" class="w-full"
+                v-model="state.mentor" />
             </UFormGroup>
 
             <UFormGroup label="Kelas">
@@ -38,10 +39,16 @@
     <UTable v-if="isFetching" loading :columns="columns" />
     <UTable v-else :rows="kelas" :columns="columns">
       <template #actions-data="{ row }">
-        <UButton v-if="isDeleting[row.id]" loading color="red">Loading</UButton>
-        <UButton v-else color="red" icon="i-heroicons-trash" @click="deleteClass(row)">
-          Delete
-        </UButton>
+        <div class="flex items-center gap-2">
+          <NuxtLink :to="'/admin/manage/class/' + row.id">
+            <UButton icon="i-heroicons-ellipsis-horizontal">
+              Details
+            </UButton>
+          </NuxtLink>
+
+          <UButton v-if="isDeleting[row.id]" loading color="red">Loading</UButton>
+          <UButton v-else color="red" icon="i-heroicons-trash" @click="isDeleting[row.id] = true" />
+        </div>
       </template>
 
     </UTable>
@@ -100,7 +107,7 @@ const isDeleting = reactive<Record<string, boolean>>({});
 const columns = [
   { key: "id", label: "ID" },
   { key: "jenis", label: "Kelas" },
-  { key: "mentor", label: "Mentor" },
+  { key: "mentor_name", label: "Mentor" },
   { key: "semester", label: "Semester" },
   { key: "actions", rowClass: "w-[5rem]" },
 ];

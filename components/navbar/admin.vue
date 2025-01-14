@@ -12,6 +12,10 @@ const links = [
   label: 'Class Management',
   icon: 'i-heroicons-academic-cap',
   to: '/admin/manage/class'
+}, {
+  label: 'Tuition Management',
+  icon: 'i-heroicons-banknotes',
+  to: '/admin/manage/tuition'  
 }]
 </script>
 
