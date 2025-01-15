@@ -1,75 +1,52 @@
-# Nuxt Minimal Starter
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+# HCQ-Nuxt
+![Nuxtjs](https://img.shields.io/badge/Nuxt-002E3B?style=for-the-badge&logo=nuxt&logoColor=#00DC82)![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+A Frontend for HCQ's Administrative Dashboard. It is powered by Nuxt 3.
 
-## Setup
 
-Make sure to install dependencies:
+## Run Locally
 
-```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
+Clone the project
 
 ```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
+  git clone https://github.com/faralha/hcq-nuxt.git
 ```
 
-## Production
-
-Build the application for production:
+Go to the project directory
 
 ```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+  cd hcq-nuxt
 ```
 
-Locally preview production build:
+Install dependencies
 
 ```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
+  npm install
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Configure API Link from .env
+```env
+API_BASE=
+```
+
+Start the server
+
+```bash
+  npm run dev
+```
+
+
+## Release Notes
+
+### v1.0
+- Role-based Authentication (Admin, Teacher, Student)
+- Class and Courses Full CRUD (Admin)
+- Semester (Admin)
+- Student to Class Assignment (Admin)
+- Grade CRUD (Teacher, Student)
+- Tuition CRUD (Admin, Student)
+
+
+## Authors
+
+- [@faralha](https://www.github.com/faralha)
