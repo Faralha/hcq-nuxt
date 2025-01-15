@@ -11,6 +11,11 @@ const links = [
     label: 'Grade',
     icon: 'i-heroicons-academic-cap',
     to: '/student/grade'
+  },
+  {
+    label: 'Tuition',
+    icon: 'i-heroicons-banknotes',
+    to: '/student/tuition'
   }
 ]
 </script>
