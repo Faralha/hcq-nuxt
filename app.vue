@@ -3,11 +3,33 @@
 
     <!-- NAVBAR -->
     <div class="">
-      <div v-if="isAdminRoute" class="h-screen py-5 px-3 bg-gray-800">
-        <div class="" v-if="isOpen">
-          <UButton icon="i-heroicons-bars-3" variant="link" @click="toggleOpen" />
+      <div v-if="isAdminRoute || isMentorRoute || isStudentRoute"
+        class="h-screen py-5 px-3 bg-gray-800 flex flex-col justify-between">
+        <div>
+          <div v-if="isAdminRoute">
+            <div class="" v-if="isOpen">
+              <UButton icon="i-heroicons-bars-3" variant="link" @click="toggleOpen" />
+            </div>
+            <NavbarAdmin v-else class="text-white min-w-[10rem]" @update:is-open="handleIsOpen" />
+          </div>
+
+          <div v-else-if="isMentorRoute">
+            <div class="" v-if="isOpen">
+              <UButton icon="i-heroicons-bars-3" variant="link" @click="toggleOpen" />
+            </div>
+            <NavbarMentor v-else class="text-white min-w-[10rem]" @update:is-open="handleIsOpen" />
+          </div>
+
+          <div v-else-if="isStudentRoute">
+            <div class="" v-if="isOpen">
+              <UButton icon="i-heroicons-bars-3" variant="link" @click="toggleOpen" />
+            </div>
+            <NavbarStudent v-else class="text-white min-w-[10rem]" @update:is-open="handleIsOpen" />
+          </div>
         </div>
-        <NavbarAdmin v-else class="text-white" @update:is-open="handleIsOpen" />
+
+        <Logout v-if="isOpen" />
+        <Logout v-else title="Log Out" />
       </div>
     </div>
 
@@ -32,6 +54,18 @@ const isAdminRoute = computed(() => {
   const path = route.path;
   return path.startsWith('/admin') && path !== '/admin/login' && path !== '/admin/register';
 });
+
+const isMentorRoute =
+  computed(() => {
+    const path = route.path;
+    return path.startsWith('/mentor') && path !== '/mentor/login' && path !== '/mentor/register';
+  })
+
+const isStudentRoute =
+  computed(() => {
+    const path = route.path;
+    return path.startsWith('/student') && path !== '/login' && path !== '/register' || path === '/';
+  })
 
 function handleIsOpen(value: boolean) {
   isOpen.value = value;

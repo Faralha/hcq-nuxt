@@ -1,11 +1,11 @@
-<script setup lang="ts">
-const route = useRoute()
-</script>
-
 <template>
-  <div>
-    <h1>Nuxt Routing set up successfully!</h1>
-    <p>Current route: {{ route.path }}</p>
-    <a href="https://nuxt.com/docs/getting-started/routing" target="_blank">Learn more about Nuxt Routing</a>
-  </div>
+  <section class="container-verysmall py-[5rem]">
+    <h1 class="text-3xl font-bold">Dashboard</h1>
+    <p class="opacity-60">Kamu adalah Murid</p>
+
+    <div class="mt-5 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-2 w-full">
+      <DashboardLinks title="Grade" description="Lihat Nilai" link-to="/student/grade"
+        icon="i-heroicons-academic-cap" />
+    </div>
+  </section>
 </template>
