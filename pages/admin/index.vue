@@ -4,8 +4,6 @@
     <p class="opacity-60">Kamu adalah Admin</p>
 
     <div class="mt-5 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-2 w-full">
-      <DashboardLinks title="Verify Mentor" description="Verifikasi Mentor" link-to="/admin/manage/mentor"
-        icon="i-heroicons-users" />
       <DashboardLinks title="Manage Semester" description="Atur Semester" link-to="/admin/manage/semester"
         icon="i-heroicons-clipboard-document-check" />
       <DashboardLinks title="Manage Class" description="Atur Kelas dan Mata Kuliah" link-to="/admin/manage/class"

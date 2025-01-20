@@ -16,11 +16,11 @@
           <UForm :state="state" @submit="addClass">
             <UFormGroup label="Mentor">
               <USelectMenu searchable searchable-placeholder="Select Mentor" :options="formattedMentor" class="w-full"
-                v-model="state.mentor" />
+                v-model="state.author" />
             </UFormGroup>
 
             <UFormGroup label="Kelas">
-              <USelect v-model="state.jenis" label="Kelas" :options="formattedCourses" />
+              <USelect v-model="state.name" label="Kelas" :options="formattedCourses" />
             </UFormGroup>
 
             <UFormGroup label="Semester">
@@ -47,7 +47,7 @@
           </NuxtLink>
 
           <UButton v-if="isDeleting[row.id]" loading color="red">Loading</UButton>
-          <UButton v-else color="red" icon="i-heroicons-trash" @click="isDeleting[row.id] = true" />
+          <UButton v-else color="red" icon="i-heroicons-trash" @click="deleteClass(row)" />
         </div>
       </template>
 
@@ -58,10 +58,10 @@
 <script setup lang="ts">
 interface Kelas {
   id: string,
-  mentor: Mentor,
+  author: Mentor,
+  teacher_id: Mentor,
   semester: number,
-  jenis: string,
-  email: string,
+  name: string,
 }
 
 interface Semester {
@@ -69,9 +69,9 @@ interface Semester {
 }
 
 interface Course {
-  jenis: string,
-  keterangan: string,
-  created_by: string,
+  name: string,
+  description: string,
+  author: string,
 }
 
 interface Mentor {
@@ -81,6 +81,15 @@ interface Mentor {
   email: string,
 }
 
+// Listen from Course Component for Course Update
+const props = defineProps<{
+  signal: boolean;
+}>();
+watch(() => props.signal, () => {
+  fetchCourses();
+  fetchClass();
+});
+
 const config = useRuntimeConfig();
 const toast = useToast();
 const kelas = ref<Kelas[]>([]);
@@ -89,15 +98,20 @@ const course = ref<Course[]>([]);
 const mentor = ref<Mentor[]>([]);
 const state = reactive<Kelas>({
   id: '',
-  mentor: {
+  author: {
+    id: '',
+    name: '',
+    is_verified: false,
+    email: '',
+  },
+  teacher_id: {
     id: '',
     name: '',
     is_verified: false,
     email: '',
   },
   semester: 0,
-  jenis: '',
-  email: '',
+  name: '',
 });
 const isOpen = ref<boolean>(false);
 const isFetching = ref<boolean>(false);
@@ -106,13 +120,13 @@ const isDeleting = reactive<Record<string, boolean>>({});
 
 const columns = [
   { key: "id", label: "ID" },
-  { key: "jenis", label: "Kelas" },
-  { key: "mentor_name", label: "Mentor" },
+  { key: "subject", label: "Kelas" },
+  { key: "teacher_id.name", label: "Mentor" },
   { key: "semester", label: "Semester" },
   { key: "actions", rowClass: "w-[5rem]" },
 ];
 const formattedCourses = computed(() => {
-  return course.value.map(c => ({ label: c.jenis, value: c.jenis }));
+  return course.value.map(c => ({ label: c.name, value: c.name }));
 });
 const formattedMentor = computed(() => {
   return mentor.value.map(m => ({ label: m.name, value: m.name, id: m.id, email: m.email }));
@@ -195,7 +209,7 @@ async function addClass() {
       },
       credentials: 'include',
       server: false,
-      body: JSON.stringify({id_mentor: state.mentor.id, jenis: state.jenis}),
+      body: JSON.stringify({id_mentor: state.author.id, jenis: state.name}),
     });
 
     if (data) {
@@ -226,6 +240,7 @@ async function deleteClass(row: Kelas) {
       server: false,
       body: JSON.stringify({ id: row.id }),
     });
+    console.log(row.id);
 
     if (data) {
       toast.add({

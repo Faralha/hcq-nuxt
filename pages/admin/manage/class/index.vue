@@ -9,11 +9,18 @@
     <h1 class="text-3xl font-bold">Class Management</h1>
 
     <!-- MATA KULIAH -->
-    <AdminManageClassCourse />
+    <AdminManageClassCourse @fetch-courses="handleFetchCourses" />
 
     <!-- KELAS -->
-    <AdminManageClassKelas />
+    <AdminManageClassKelas :signal="signal" />
 
 
   </section>
 </template>
+
+<script setup>
+const signal = ref(false);
+const handleFetchCourses = () => {
+  signal.value = !signal.value;
+}
+</script>

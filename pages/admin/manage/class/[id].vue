@@ -37,7 +37,7 @@
     </div>
 
     <UTable loading v-if="isFetching" :columns="columns" />
-    <UTable v-else :rows="classDetails" :columns="columns">
+    <UTable v-else :rows="classDetails.students" :columns="columns">
       <template #actions-data="{ row }">
         <UButton v-if="isDeleting[row.student_id]" loading color="red" />
         <UButton v-else color="red" icon="i-heroicons-user-minus" @click="removeStudent(row)">
@@ -54,11 +54,8 @@ interface ClassDetails {
   class_id: string;
   class_jenis: string;
   class_semester: number;
-  mentor_name: string;
-  student_id: string;
-  student_name: string;
-  student_email: string;
-  student_phone_number: string;
+  class_teacher: string;
+  students: Student[];
 }
 
 interface Student {
@@ -71,7 +68,15 @@ interface Student {
 const toast = useToast();
 const config = useRuntimeConfig();
 const class_id = useRoute().params.id;
-const classDetails = ref<ClassDetails[]>([]);
+const classDetails = ref<ClassDetails>(
+  {
+    class_id: '',
+    class_jenis: '',
+    class_semester: 0,
+    class_teacher: '',
+    students: [],
+  }
+);
 const students = ref<Student[]>([]);
 const state = reactive({
   students: [] as { label: string, value: string }[],
@@ -83,15 +88,15 @@ const isDeleting = reactive<Record<string, boolean>>({});
 const isAdding = ref<boolean>(false);
 
 const columns = [
-  { key: "student_id", label: "ID" },
-  { key: "student_name", label: "Nama" },
-  { key: "student_email", label: "Email" },
-  { key: "student_phone_number", label: "Nomor Telepon" },
+  { key: "id", label: "ID" },
+  { key: "name", label: "Nama" },
+  { key: "email", label: "Email" },
+  // { key: "phone_number", label: "Nomor Telepon" },
   { key: "actions" }
 ]
 
 const formattedStudents = computed(() => {
-  const studentIdsInClass = new Set(classDetails.value.map(c => c.student_id));
+  const studentIdsInClass = new Set(classDetails.value.students.map(s => s.id));
   return students.value
     .filter(student => !studentIdsInClass.has(student.id))
     .map(student => ({
@@ -102,15 +107,15 @@ const formattedStudents = computed(() => {
 
 const mentor = ref<string | null>(null);
 watch(classDetails, (newVal) => {
-  if (newVal.length > 0) {
-    mentor.value = newVal[0].mentor_name;
+  if (newVal.class_teacher) {
+    mentor.value = newVal.class_teacher;
   }
 });
 
 async function fetchClassDetails() {
   try {
     isFetching.value = true;
-    const { data, error } = await useFetch<ClassDetails[]>(`${config.public.apiBase}/admin/class/${class_id}`, {
+    const { data, error } = await useFetch<ClassDetails>(`${config.public.apiBase}/admin/class/${class_id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -118,7 +123,9 @@ async function fetchClassDetails() {
       credentials: 'include',
       server: false,
     });
-    classDetails.value = data.value || [];
+    if (data.value) {
+      classDetails.value = data.value;
+    }
   } catch (error) {
     console.error(error);
   } finally {
@@ -145,7 +152,8 @@ async function fetchStudents() {
 async function assignStudent() {
   try {
     isAdding.value = true;
-    const studentIds = state.students.map(({value}) => value);
+    const studentIds = state.students.map(({ value }) => value);
+    console.log(studentIds)
     const { data, error } = await useFetch(`${config.public.apiBase}/admin/class/assign`, {
       method: 'POST',
       headers: {
@@ -176,10 +184,10 @@ async function assignStudent() {
   }
 }
 
-async function removeStudent(row: ClassDetails) {
-  isDeleting[row.student_id] = true;
+async function removeStudent(row: Student) {
+  isDeleting[row.id] = true;
   try {
-    const { data, error } = await useFetch<ClassDetails>(`${config.public.apiBase}/admin/class/remove?class_id=${class_id}&student_id=${row.student_id}`, {
+    const { data } = await useFetch<Student>(`${config.public.apiBase}/admin/class/remove?class_id=${class_id}&student_id=${row.id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -188,7 +196,7 @@ async function removeStudent(row: ClassDetails) {
       server: false,
     });
     if (data) {
-      classDetails.value = classDetails.value.filter(c => c.student_id !== row.student_id);
+      classDetails.value.students = classDetails.value.students.filter(student => student.id !== row.id);
       toast.add({
         title: 'Success',
         description: 'Student has been removed from class',
@@ -198,7 +206,7 @@ async function removeStudent(row: ClassDetails) {
   } catch (error) {
     console.error(error);
   } finally {
-    isDeleting[row.student_id] = false;
+    isDeleting[row.id] = false;
   }
 }
 

@@ -144,7 +144,7 @@ async function fetchTuition() {
 
 async function fetchSemester() {
   try {
-    const { data, error } = await useFetch<Semester[]>(`${config.public.apiBase}/semester`, {
+    const { data, error } = await useFetch<Semester[]>(`${config.public.apiBase}/admin/semester`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

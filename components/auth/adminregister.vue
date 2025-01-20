@@ -80,12 +80,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       },
       credentials: "include",
     });
-    if (response.status == 'success') {
-      error.value = null;
-      await navigateTo(`/admin/login`);
-    } else {
-      error.value = response.message || "An error occurred";
-    }
+    await navigateTo(`/admin/login`);
   } catch (err: any) {
     error.value = err.message || "An error occurred";
   } finally {

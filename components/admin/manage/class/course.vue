@@ -13,10 +13,13 @@
           <div class="p-4">
             <UForm :state="courseState" @submit="addCourse">
               <UFormGroup label="Mata Kuliah">
-                <UInput v-model="courseState.jenis" label="Mata Kuliah" />
+                <UInput v-model="courseState.name" label="Mata Kuliah" />
               </UFormGroup>
               <UFormGroup label="Keterangan">
-                <UInput v-model="courseState.keterangan" label="Keterangan" />
+                <UInput v-model="courseState.description" label="Keterangan" />
+              </UFormGroup>
+              <UFormGroup label="Fee">
+                <UInput v-model="courseState.fee" label="Fee" />
               </UFormGroup>
               <div class="mt-3">
                 <UButton v-if="isAdding" loading class="px-5">Loading</UButton>
@@ -42,31 +45,38 @@
 
 <script setup lang="ts">
 interface Course {
-  jenis: string,
-  keterangan: string,
-  created_by: string,
+  name: string,
+  description: string,
+  author: string,
+  fee: number,
 }
 
 const toast = useToast();
 const config = useRuntimeConfig();
 const course = ref<Course[]>([]);
 const columns = [
-  { key: "jenis", label: "Mata Kuliah" },
-  { key: "keterangan", label: "Keterangan" },
-  { key: "created_by", label: "Created By" },
+  { key: "name", label: "Mata Kuliah" },
+  { key: "description", label: "Keterangan" },
+  { key: "fee", label: "Fee" },
+  { key: "author", label: "Created By" },
   { key: "actions", rowClass: "w-[5rem]" },
 ];
 const isFetching = ref<boolean>(false);
 const isAdding = ref<boolean>(false);
 const isDeleting = reactive<Record<string, boolean>>({});
 const courseState = reactive<Course>({
-  jenis: '',
-  keterangan: '',
-  created_by: '',
+  name: '',
+  description: '',
+  author: '',
+  fee: 0,
 });
+
+// Signal to notify Kelas Component fetchCourses
+const emit = defineEmits(['fetchCourses']);
 
 async function fetchCourses() {
   try {
+    emit('fetchCourses');
     isFetching.value = true;
     const { data, error } = await useFetch<Course[]>(`${config.public.apiBase}/admin/course`, {
       method: 'GET',
@@ -104,7 +114,12 @@ async function addCourse() {
         icon: 'i-heroicons-check-circle',
       });
       fetchCourses();
-    }
+    } else
+      toast.add({
+        title: 'Error',
+        description: error.value?.message || 'An error occurred',
+        icon: 'i-heroicons-x-circle',
+      });
   } catch (error) {
 
   } finally {
@@ -114,29 +129,41 @@ async function addCourse() {
 
 async function deleteCourse(row: Course) {
   try {
-    isDeleting[row.jenis] = true;
-    const { data, error } = await useFetch<Course>(`${config.public.apiBase}/admin/course`, {
+    isDeleting[row.name] = true;
+    const { data, error, status } = await useFetch<Course>(`${config.public.apiBase}/admin/course`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       },
       credentials: 'include',
       server: false,
-      body: JSON.stringify({ jenis: row.jenis }),
+      body: JSON.stringify({ name: row.name }),
     });
 
-    if (data) {
+    if (status.value === 'success') {
       toast.add({
         title: 'Success',
         description: 'Course has been deleted',
         icon: 'i-heroicons-check-circle',
       });
       fetchCourses();
+    } else {
+      toast.add({
+        title: 'Error',
+        description: error.value?.message || 'An error occurred',
+        icon: 'i-heroicons-x-circle',
+      });
     }
-  } catch (error) {
 
+  } catch (error) {
+    console.log(error);
+    toast.add({
+      title: 'Error',
+      description: 'An error occurred',
+      icon: 'i-heroicons-x-circle',
+    });
   } finally {
-    isDeleting[row.jenis] = false;
+    isDeleting[row.name] = false;
   }
 }
 

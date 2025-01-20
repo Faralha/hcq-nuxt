@@ -7,11 +7,12 @@ function toggleOpen() {
   emit('update:isOpen', isOpen.value);
 }
 const links = [
-  {
-    label: 'Mentor Verification',
-    icon: 'i-heroicons-check-badge',
-    to: '/admin/manage/mentor'
-  }, {
+  // {
+  //   label: 'Mentor Verification',
+  //   icon: 'i-heroicons-check-badge',
+  //   to: '/admin/manage/mentor'
+  // },
+   {
     label: 'Semester Management',
     icon: 'i-heroicons-clipboard-document-check',
     to: '/admin/manage/semester'
