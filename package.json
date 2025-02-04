@@ -14,7 +14,7 @@
     "@nuxt/ui": "^2.20.0",
     "@vite-pwa/nuxt": "^0.10.6",
     "date-fns": "^4.1.0",
-    "nuxt": "^3.15.1",
+    "nuxt": "^3.15.4",
     "vue": "latest",
     "vue-router": "latest"
   }
